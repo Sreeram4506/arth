@@ -25,6 +25,9 @@
     --accent: 43 85% 55%;
     --accent-foreground: 0 0% 9%;
 
+    --surface: 0 0% 6%;
+    --surface-deep: 0 0% 2%;
+
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
 
@@ -51,11 +54,28 @@
     @apply bg-background text-foreground;
     line-height: 1.6;
     overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    caret-color: hsl(var(--accent));
+  }
+
+  h1, h2, h3 {
+    text-wrap: balance;
   }
 
   ::selection {
-    background-color: rgba(156, 163, 175, 0.3);
-    color: #fafafa;
+    background-color: hsl(var(--accent));
+    color: hsl(var(--accent-foreground));
+  }
+
+  :focus-visible {
+    outline: 2px solid hsl(var(--accent));
+    outline-offset: 4px;
+    border-radius: 2px;
+  }
+
+  a {
+    text-underline-offset: 0.25em;
+    text-decoration-thickness: 1px;
   }
 }
 
@@ -120,32 +140,58 @@
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #444;
+  background: hsl(var(--accent) / 0.6);
 }
 
-/* Section spacing */
+/* Section spacing — one gutter for every section, hero and footer */
+.gutter {
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
 .section-padding {
-  padding: 8rem 2rem;
+  padding: 7rem 1.5rem;
 }
 
 @media (min-width: 768px) {
+  .gutter {
+    padding-left: 3rem;
+    padding-right: 3rem;
+  }
+
+  .section-padding {
+    padding: 10rem 3rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .gutter {
+    padding-left: 4rem;
+    padding-right: 4rem;
+  }
+
   .section-padding {
     padding: 12rem 4rem;
   }
 }
 
-@media (min-width: 1024px) {
-  .section-padding {
-    padding: 16rem 6rem;
+/* Capabilities ticker */
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  animation: marquee 48s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
   }
-}
 
-/* Image grayscale filter */
-.img-editorial {
-  filter: grayscale(100%);
-  transition: filter 0.6s ease;
-}
-
-.img-editorial:hover {
-  filter: grayscale(0%);
+  .animate-marquee,
+  .grain-overlay::before {
+    animation: none;
+  }
 }

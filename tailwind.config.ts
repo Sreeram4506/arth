@@ -47,6 +47,13 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        surface: {
+          DEFAULT: "hsl(var(--surface))",
+          deep: "hsl(var(--surface-deep))",
+        },
+      },
+      transitionTimingFunction: {
+        'out-expo': 'cubic-bezier(0.16, 1, 0.3, 1)',
       },
       fontFamily: {
         display: ['Outfit', 'sans-serif'],
@@ -54,7 +61,7 @@ export default {
         mono: ['JetBrains Mono', 'ui-monospace', 'monospace'],
       },
       fontSize: {
-        'hero': 'clamp(3rem, 10vw, 8rem)',
+        'hero': 'clamp(3rem, 9vw, 6rem)',
         'section': 'clamp(2.5rem, 8vw, 6rem)',
         'large': 'clamp(2rem, 5vw, 4rem)',
       },

@@ -1,6 +1,21 @@
-import { motion } from 'framer-motion'
+import { useRef } from 'react'
+import { motion, useInView } from 'framer-motion'
+import { CountUp } from '@/components/CountUp'
+import { RevealHeading } from '@/components/RevealHeading'
+import { EASE_OUT_EXPO } from '@/lib/motion'
 
-const caseStudies = [
+type Metric = { value: number; decimals?: number; prefix?: string; suffix?: string; label: string }
+
+type CaseStudy = {
+  client: string
+  sector: string
+  year: string
+  summary: string
+  metrics: Metric[]
+  stack: string[]
+}
+
+const caseStudies: CaseStudy[] = [
   {
     client: 'Lumina Skincare',
     sector: 'DTC E-commerce',
@@ -8,8 +23,8 @@ const caseStudies = [
     summary:
       'Scaled customer acquisition through high-converting UGC creatives and an aggressive Meta Ads scaling strategy, dominating the Q4 holiday season.',
     metrics: [
-      { value: '4.2x', label: 'Return on Ad Spend' },
-      { value: '$2.8M', label: 'Revenue Generated' },
+      { value: 4.2, decimals: 1, suffix: 'x', label: 'Return on ad spend' },
+      { value: 2.8, decimals: 1, prefix: '$', suffix: 'M', label: 'Revenue generated' },
     ],
     stack: ['Meta Ads', 'TikTok Ads', 'Shopify', 'Klaviyo'],
   },
@@ -20,8 +35,8 @@ const caseStudies = [
     summary:
       'Overhauled technical SEO and executed a targeted content cluster strategy to capture high-intent enterprise search traffic from competitors.',
     metrics: [
-      { value: '+310%', label: 'Organic Traffic' },
-      { value: '85', label: 'Enterprise Leads' },
+      { value: 310, prefix: '+', suffix: '%', label: 'Organic traffic' },
+      { value: 85, label: 'Enterprise leads' },
     ],
     stack: ['Technical SEO', 'Content Strategy', 'HubSpot', 'LinkedIn Ads'],
   },
@@ -32,8 +47,8 @@ const caseStudies = [
     summary:
       'Engineered a viral brand launch campaign focused on influencer partnerships and a high-converting waitlist funnel.',
     metrics: [
-      { value: '150k', label: 'Waitlist Signups' },
-      { value: '$1M+', label: 'Day 1 Sales' },
+      { value: 150, suffix: 'k', label: 'Waitlist signups' },
+      { value: 1, prefix: '$', suffix: 'M+', label: 'Day 1 sales' },
     ],
     stack: ['Influencer Marketing', 'CRO', 'Webflow', 'PR'],
   },
@@ -44,95 +59,90 @@ const caseStudies = [
     summary:
       'Complete brand repositioning and website redesign, coupled with a full-funnel retention strategy to increase customer lifetime value.',
     metrics: [
-      { value: '+65%', label: 'Repeat Purchase Rate' },
-      { value: '+42%', label: 'Average Order Value' },
+      { value: 65, prefix: '+', suffix: '%', label: 'Repeat purchase rate' },
+      { value: 42, prefix: '+', suffix: '%', label: 'Average order value' },
     ],
     stack: ['Brand Strategy', 'UI/UX', 'Email Marketing', 'SMS'],
   },
 ]
 
-const fadeInUp = {
-  initial: { opacity: 0, y: 60 },
-  whileInView: { opacity: 1, y: 0 },
-  viewport: { once: true, margin: '-100px' },
-  transition: { duration: 1, ease: 'easeOut' },
+function CaseStudyRow({ project }: { project: CaseStudy }) {
+  const ref = useRef<HTMLElement>(null)
+  const inView = useInView(ref, { once: true, amount: 0.35 })
+
+  return (
+    <motion.article
+      ref={ref}
+      initial={{ opacity: 0, y: 32 }}
+      animate={inView ? { opacity: 1, y: 0 } : undefined}
+      transition={{ duration: 1, ease: EASE_OUT_EXPO }}
+      className="group relative border-t border-white/15 py-12 md:py-16"
+    >
+      <div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
+        <div className="lg:col-span-5">
+          <h3 className="font-display text-3xl leading-tight tracking-tight text-white transition-colors duration-500 group-hover:text-[hsl(var(--accent))] md:text-4xl lg:text-5xl">
+            {project.client}
+          </h3>
+          <p className="mt-3 text-sm text-white/55">
+            {project.sector}
+            <span aria-hidden="true" className="mx-2 text-white/25">
+              /
+            </span>
+            <span className="tabular-nums">{project.year}</span>
+          </p>
+        </div>
+
+        <div className="lg:col-span-6 lg:col-start-7">
+          <p className="max-w-xl text-base leading-relaxed text-white/65">{project.summary}</p>
+
+          <dl className="mt-10 grid grid-cols-2 gap-6">
+            {project.metrics.map((metric) => (
+              <div key={metric.label} className="border-t border-white/10 pt-5">
+                <dt className="sr-only">{metric.label}</dt>
+                <dd className="font-display text-4xl leading-none tracking-tight text-white md:text-5xl">
+                  <CountUp
+                    value={metric.value}
+                    decimals={metric.decimals}
+                    prefix={metric.prefix}
+                    suffix={metric.suffix}
+                    start={inView}
+                    duration={2}
+                  />
+                </dd>
+                <dd aria-hidden="true" className="mt-3 text-sm text-white/55">
+                  {metric.label}
+                </dd>
+              </div>
+            ))}
+          </dl>
+
+          <ul className="mt-8 flex flex-wrap gap-2" aria-label={`${project.client} channels and tools`}>
+            {project.stack.map((item) => (
+              <li
+                key={item}
+                className="rounded-full border border-white/10 px-3 py-1 text-xs text-white/65 transition-colors duration-500 group-hover:border-[hsl(var(--accent)/0.35)]"
+              >
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </motion.article>
+  )
 }
 
 export function Work() {
   return (
     <section id="work" className="section-padding">
-      <div className="max-w-7xl mx-auto">
-        <motion.div {...fadeInUp} className="mb-16">
-          <span className="font-mono text-xs text-[hsl(var(--accent))] tracking-[0.3em] uppercase font-bold">
-            Proven Results
-          </span>
-          <div className="w-6 h-px bg-[hsl(var(--accent))] mt-2" />
-        </motion.div>
+      <div className="mx-auto max-w-7xl">
+        <RevealHeading lines={['Case', 'Studies.']} className="mb-16 text-section lg:mb-24" />
 
-        <motion.h2
-          {...fadeInUp}
-          className="font-display text-[8vw] lg:text-section leading-none tracking-tight mb-16 lg:mb-24"
-        >
-          Case<br />Studies.
-        </motion.h2>
-
-        <div className="space-y-0">
-          {caseStudies.map((project, index) => (
-            <motion.article
-              key={project.client}
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-50px' }}
-              transition={{ duration: 0.8, ease: 'easeOut', delay: index * 0.1 }}
-              className="border-t border-gray-800 py-8 md:py-12 lg:py-16 group"
-            >
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">
-                <div className="lg:col-span-5">
-                  <h3 className="text-xl md:text-2xl lg:text-3xl font-bold text-white mb-2 group-hover:text-[hsl(var(--accent))] transition-colors duration-300">
-                    {project.client}
-                  </h3>
-                  <p className="text-base text-gray-400">{project.sector}</p>
-                </div>
-
-                <div className="lg:col-span-2">
-                  <p className="font-mono text-xs text-gray-500 tracking-[0.2em] uppercase group-hover:text-[hsl(var(--accent)/0.7)] transition-colors duration-300">
-                    {project.year}
-                  </p>
-                </div>
-
-                <div className="lg:col-span-5">
-                  <p className="text-gray-400 leading-relaxed mb-8 text-sm lg:text-base">
-                    {project.summary}
-                  </p>
-
-                  <div className="grid grid-cols-2 gap-6 mb-6">
-                    {project.metrics.map((metric) => (
-                      <div key={metric.label} className="border-l-2 border-[hsl(var(--accent)/0.3)] pl-4">
-                        <p className="font-display text-3xl lg:text-4xl text-white leading-none">
-                          {metric.value}
-                        </p>
-                        <p className="font-mono text-[10px] tracking-widest uppercase text-gray-500 mt-2 font-semibold">
-                          {metric.label}
-                        </p>
-                      </div>
-                    ))}
-                  </div>
-
-                  <div className="flex flex-wrap gap-2">
-                    {project.stack.map((item) => (
-                      <span
-                        key={item}
-                        className="px-3 py-1 font-mono text-[10px] tracking-widest uppercase text-gray-400 border border-gray-800 rounded-md group-hover:border-[hsl(var(--accent)/0.5)] transition-colors duration-300"
-                      >
-                        {item}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </motion.article>
+        <div>
+          {caseStudies.map((project) => (
+            <CaseStudyRow key={project.client} project={project} />
           ))}
-          <div className="border-t border-gray-800" />
+          <div aria-hidden="true" className="h-px bg-white/15" />
         </div>
       </div>
     </section>

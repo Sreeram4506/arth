@@ -1,40 +1,31 @@
 import { useState, useEffect } from 'react'
 
-const sections = ['about', 'skills', 'work', 'education', 'writing', 'speaking', 'contact']
+const sections = ['services', 'process', 'work', 'contact']
 
 export function useActiveSection() {
-  const [activeSection, setActiveSection] = useState<string>('about')
+  const [activeSection, setActiveSection] = useState('')
 
   useEffect(() => {
-    const observers: IntersectionObserver[] = []
+    const visible = new Set<string>()
 
-    sections.forEach((sectionId) => {
-      const element = document.getElementById(sectionId)
-      if (!element) return
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) visible.add(entry.target.id)
+          else visible.delete(entry.target.id)
+        })
+        setActiveSection(sections.find((id) => visible.has(id)) ?? '')
+      },
+      { rootMargin: '-20% 0px -60% 0px', threshold: 0 }
+    )
 
-      const observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              setActiveSection(sectionId)
-            }
-          })
-        },
-        {
-          rootMargin: '-20% 0px -60% 0px',
-          threshold: 0,
-        }
-      )
-
-      observer.observe(element)
-      observers.push(observer)
+    sections.forEach((id) => {
+      const element = document.getElementById(id)
+      if (element) observer.observe(element)
     })
 
-    return () => {
-      observers.forEach((observer) => observer.disconnect())
-    }
+    return () => observer.disconnect()
   }, [])
 
   return activeSection
 }
-
