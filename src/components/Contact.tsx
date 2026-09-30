@@ -4,7 +4,8 @@ import { ArrowUpRight, Check } from 'lucide-react'
 import { RevealHeading } from '@/components/RevealHeading'
 import { EASE_OUT_EXPO } from '@/lib/motion'
 
-const CONTACT_EMAIL = 'hello@arth.agency'
+const CONTACT_EMAIL = 'buildwitharth@gmail.com'
+const WHATSAPP_NUMBER = '919809987999'
 
 const rise = {
   hidden: { opacity: 0, y: 24 },
@@ -27,9 +28,9 @@ export function Contact() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    const subject = encodeURIComponent(`Growth Strategy Audit — ${company || name}`)
-    const body = encodeURIComponent(`${message}\n\n— ${name}${company ? `, ${company}` : ''}`)
-    window.location.href = `mailto:${CONTACT_EMAIL}?subject=${subject}&body=${body}`
+    const text = `Hi ARTH! I'm ${name}${company ? ` from ${company}` : ''}.\n\n${message}`
+    const encoded = encodeURIComponent(text)
+    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encoded}`, '_blank')
     setSent(true)
   }
 
@@ -143,7 +144,7 @@ export function Contact() {
                     className="inline-flex items-center gap-2"
                   >
                     <Check aria-hidden="true" className="h-4 w-4 text-[hsl(var(--accent))]" />
-                    Your email app should open with the message ready to send.
+                    Your WhatsApp should open with the message ready to send.
                   </motion.span>
                 )}
               </p>

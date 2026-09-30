@@ -14,8 +14,8 @@ const navItems = [
 ]
 
 const socialLinks = [
-  { label: 'LinkedIn', href: 'https://linkedin.com' },
-  { label: 'Twitter', href: 'https://twitter.com' },
+  { label: 'Instagram', href: 'https://www.instagram.com/arthmarketingmedia' },
+  { label: 'Email', href: 'mailto:buildwitharth@gmail.com' },
 ]
 
 export function Navigation() {
@@ -73,10 +73,11 @@ export function Navigation() {
                   exit={{ opacity: 0, y: -10 }}
                   transition={{ duration: 0.6, ease: EASE_OUT_EXPO }}
                   onClick={() => window.scrollTo({ top: 0 })}
-                  aria-label="arth — back to top"
-                  className="pointer-events-auto font-display text-2xl leading-none tracking-tighter text-white transition-colors duration-300 hover:text-[hsl(var(--accent))]"
+                  aria-label="ARTH — back to top"
+                  className="pointer-events-auto flex items-center gap-2 font-display text-2xl leading-none tracking-tighter text-white transition-colors duration-300 hover:text-[hsl(var(--accent))]"
                 >
-                  arth
+                  <img src="/image.png" alt="" className="h-11 w-11 object-contain md:h-9 md:w-9" />
+                  <span className="hidden md:inline">ARTH</span>
                 </motion.button>
               )}
             </AnimatePresence>

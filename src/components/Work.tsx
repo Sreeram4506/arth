@@ -1,133 +1,143 @@
-import { useRef } from 'react'
-import { motion, useInView } from 'framer-motion'
-import { CountUp } from '@/components/CountUp'
+import { motion } from 'framer-motion'
+import { ArrowUpRight } from 'lucide-react'
 import { RevealHeading } from '@/components/RevealHeading'
 import { EASE_OUT_EXPO } from '@/lib/motion'
-
-type Metric = { value: number; decimals?: number; prefix?: string; suffix?: string; label: string }
 
 type CaseStudy = {
   client: string
   sector: string
-  year: string
+  location?: string
   summary: string
-  metrics: Metric[]
-  stack: string[]
+  delivered: string[]
+  /** Leave undefined until the link is available; the row then renders without one */
+  href?: string
+  linkLabel: string
 }
 
 const caseStudies: CaseStudy[] = [
   {
-    client: 'Lumina Skincare',
-    sector: 'DTC E-commerce',
-    year: '2025',
+    client: 'Fit Secrets',
+    sector: 'Fitness',
     summary:
-      'Scaled customer acquisition through high-converting UGC creatives and an aggressive Meta Ads scaling strategy, dominating the Q4 holiday season.',
-    metrics: [
-      { value: 4.2, decimals: 1, suffix: 'x', label: 'Return on ad spend' },
-      { value: 2.8, decimals: 1, prefix: '$', suffix: 'M', label: 'Revenue generated' },
-    ],
-    stack: ['Meta Ads', 'TikTok Ads', 'Shopify', 'Klaviyo'],
+      'Complete content and growth partner. We shoot and edit their videos, run their social media, manage their Meta Ads and handle SEO.',
+    delivered: ['Video shooting', 'Video editing', 'Social media handling', 'Meta Ads', 'SEO'],
+    href: undefined,
+    linkLabel: 'View on Instagram',
   },
   {
-    client: 'Apex Fintech',
-    sector: 'B2B SaaS',
-    year: '2024',
+    client: 'Quantumrise Infra',
+    sector: 'Real estate',
+    location: 'Bangalore',
     summary:
-      'Overhauled technical SEO and executed a targeted content cluster strategy to capture high-intent enterprise search traffic from competitors.',
-    metrics: [
-      { value: 310, prefix: '+', suffix: '%', label: 'Organic traffic' },
-      { value: 85, label: 'Enterprise leads' },
-    ],
-    stack: ['Technical SEO', 'Content Strategy', 'HubSpot', 'LinkedIn Ads'],
+      'A developer of premium plotted communities in East Bangalore. We designed and built their website and handle their SEO.',
+    delivered: ['Website design & development', 'SEO'],
+    href: 'https://www.quantumriseinfra.com',
+    linkLabel: 'quantumriseinfra.com',
   },
   {
-    client: 'Neon Energy',
-    sector: 'Consumer Electronics',
-    year: '2024',
+    client: 'Samadhai Technologies',
+    sector: 'Software',
+    location: 'Hyderabad',
     summary:
-      'Engineered a viral brand launch campaign focused on influencer partnerships and a high-converting waitlist funnel.',
-    metrics: [
-      { value: 150, suffix: 'k', label: 'Waitlist signups' },
-      { value: 1, prefix: '$', suffix: 'M+', label: 'Day 1 sales' },
-    ],
-    stack: ['Influencer Marketing', 'CRO', 'Webflow', 'PR'],
+      'A software company building AI-driven internal tools and enterprise platforms. We built their website and handle their SEO.',
+    delivered: ['Website design & development', 'SEO'],
+    href: 'https://www.samadhaitechnologies.com',
+    linkLabel: 'samadhaitechnologies.com',
   },
   {
-    client: 'Aura Athletics',
-    sector: 'Apparel',
-    year: '2023',
+    client: 'Acuity Tax',
+    sector: 'Tax & compliance',
+    location: 'Hyderabad',
     summary:
-      'Complete brand repositioning and website redesign, coupled with a full-funnel retention strategy to increase customer lifetime value.',
-    metrics: [
-      { value: 65, prefix: '+', suffix: '%', label: 'Repeat purchase rate' },
-      { value: 42, prefix: '+', suffix: '%', label: 'Average order value' },
-    ],
-    stack: ['Brand Strategy', 'UI/UX', 'Email Marketing', 'SMS'],
+      'A tax and compliance firm offering GST, income tax filing, company incorporation and business advisory. We built their website and handle their SEO.',
+    delivered: ['Website design & development', 'SEO'],
+    href: 'https://www.acuitytax.in',
+    linkLabel: 'acuitytax.in',
   },
 ]
 
 function CaseStudyRow({ project }: { project: CaseStudy }) {
-  const ref = useRef<HTMLElement>(null)
-  const inView = useInView(ref, { once: true, amount: 0.35 })
+  const isLinked = Boolean(project.href)
 
   return (
     <motion.article
-      ref={ref}
       initial={{ opacity: 0, y: 32 }}
-      animate={inView ? { opacity: 1, y: 0 } : undefined}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.35 }}
       transition={{ duration: 1, ease: EASE_OUT_EXPO }}
       className="group relative border-t border-white/15 py-12 md:py-16"
     >
+      {/* Gold rule sweeps across on hover, matching the services list */}
+      <span
+        aria-hidden="true"
+        className="absolute inset-x-0 -top-px h-px origin-left scale-x-0 bg-[hsl(var(--accent))] transition-transform duration-700 ease-out-expo group-hover:scale-x-100"
+      />
+
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
         <div className="lg:col-span-5">
           <h3 className="font-display text-3xl leading-tight tracking-tight text-white transition-colors duration-500 group-hover:text-[hsl(var(--accent))] md:text-4xl lg:text-5xl">
-            {project.client}
+            {isLinked ? (
+              // The stretched ::after makes the whole row clickable while the link keeps a short accessible name.
+              // Only the inner span moves on hover: a transform on the link would shrink the ::after to the heading.
+              <a
+                href={project.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="after:absolute after:inset-0 after:content-[''] focus-visible:outline-none"
+              >
+                <span className="inline-block transition-transform duration-500 ease-out-expo group-hover:translate-x-2">
+                  {project.client}
+                </span>
+              </a>
+            ) : (
+              project.client
+            )}
           </h3>
-          <p className="mt-3 text-sm text-white/55">
+          <p className="mt-3 text-sm text-white/60">
             {project.sector}
-            <span aria-hidden="true" className="mx-2 text-white/25">
-              /
-            </span>
-            <span className="tabular-nums">{project.year}</span>
+            {project.location && (
+              <>
+                <span aria-hidden="true" className="mx-2 text-white/30">
+                  /
+                </span>
+                {project.location}
+              </>
+            )}
           </p>
         </div>
 
         <div className="lg:col-span-6 lg:col-start-7">
-          <p className="max-w-xl text-base leading-relaxed text-white/65">{project.summary}</p>
+          <p className="max-w-xl text-base leading-relaxed text-white/70 md:text-lg">{project.summary}</p>
 
-          <dl className="mt-10 grid grid-cols-2 gap-6">
-            {project.metrics.map((metric) => (
-              <div key={metric.label} className="border-t border-white/10 pt-5">
-                <dt className="sr-only">{metric.label}</dt>
-                <dd className="font-display text-4xl leading-none tracking-tight text-white md:text-5xl">
-                  <CountUp
-                    value={metric.value}
-                    decimals={metric.decimals}
-                    prefix={metric.prefix}
-                    suffix={metric.suffix}
-                    start={inView}
-                    duration={2}
-                  />
-                </dd>
-                <dd aria-hidden="true" className="mt-3 text-sm text-white/55">
-                  {metric.label}
-                </dd>
-              </div>
-            ))}
-          </dl>
-
-          <ul className="mt-8 flex flex-wrap gap-2" aria-label={`${project.client} channels and tools`}>
-            {project.stack.map((item) => (
+          <h4 className="mt-8 text-xs font-medium uppercase tracking-[0.14em] text-white/55">What we did</h4>
+          <ul className="mt-3 flex flex-wrap gap-2">
+            {project.delivered.map((item) => (
               <li
                 key={item}
-                className="rounded-full border border-white/10 px-3 py-1 text-xs text-white/65 transition-colors duration-500 group-hover:border-[hsl(var(--accent)/0.35)]"
+                className="rounded-full border border-white/15 px-3 py-1.5 text-sm text-white/75 transition-colors duration-500 group-hover:border-[hsl(var(--accent)/0.4)]"
               >
                 {item}
               </li>
             ))}
           </ul>
+
+          {isLinked && (
+            <p
+              aria-hidden="true"
+              className="mt-8 inline-flex items-center gap-2 text-sm font-medium text-white transition-colors duration-300 group-hover:text-[hsl(var(--accent))]"
+            >
+              {project.linkLabel}
+              <ArrowUpRight className="h-4 w-4 transition-transform duration-300 ease-out-expo group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+            </p>
+          )}
         </div>
       </div>
+
+      {/* Focus ring for keyboard users, drawn around the whole clickable row */}
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 rounded-lg outline outline-2 outline-offset-4 outline-transparent group-has-[:focus-visible]:outline-[hsl(var(--accent))]"
+      />
     </motion.article>
   )
 }
@@ -136,7 +146,12 @@ export function Work() {
   return (
     <section id="work" className="section-padding">
       <div className="mx-auto max-w-7xl">
-        <RevealHeading lines={['Case', 'Studies.']} className="mb-16 text-section lg:mb-24" />
+        <div className="mb-16 flex flex-col gap-8 lg:mb-24 lg:flex-row lg:items-end lg:justify-between">
+          <RevealHeading lines={['Case', 'Studies.']} className="text-section" />
+          <p className="max-w-md text-lg leading-relaxed text-white/70 lg:pb-3">
+            A few of the businesses we've helped with content, websites, SEO and social media.
+          </p>
+        </div>
 
         <div>
           {caseStudies.map((project) => (

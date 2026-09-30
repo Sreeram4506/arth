@@ -12,9 +12,8 @@ const companyLinks = [
 ]
 
 const socialLinks = [
-  { label: 'LinkedIn', href: 'https://linkedin.com' },
-  { label: 'Twitter', href: 'https://twitter.com' },
-  { label: 'Instagram', href: 'https://instagram.com' },
+  { label: 'Instagram', href: 'https://www.instagram.com/arthmarketingmedia' },
+  { label: 'Email', href: 'mailto:buildwitharth@gmail.com' },
 ]
 
 const headingClass = 'mb-6 text-xs font-medium uppercase tracking-[0.14em] text-white/55'
@@ -30,8 +29,8 @@ export function Footer() {
       <div className="gutter mx-auto max-w-7xl box-content pt-20 lg:pt-28">
         <div className="grid grid-cols-2 gap-12 md:grid-cols-12 lg:gap-8">
           <div className="col-span-2 md:col-span-5">
-            <p className="font-display text-3xl tracking-tighter text-white">arth</p>
-            <p className="mt-2 text-sm font-medium text-white/80">Arth Marketing Media</p>
+            <p className="font-display text-3xl tracking-tighter text-white">ARTH</p>
+            <p className="mt-2 text-sm font-medium text-white/80">ARTH Marketing Media</p>
             <p className="mt-5 max-w-sm text-sm leading-relaxed text-white/60">
               Marketing. Content. Technology. Helping businesses attract customers both online and offline.
             </p>
@@ -88,7 +87,7 @@ export function Footer() {
 
         <div className="mt-20 flex flex-col-reverse items-start justify-between gap-6 border-t border-white/10 pt-8 sm:flex-row sm:items-center">
           <p className="text-xs text-white/55">
-            © <span className="tabular-nums">{new Date().getFullYear()}</span> Arth Marketing Media. Online. Offline.
+            © <span className="tabular-nums">{new Date().getFullYear()}</span> ARTH Marketing Media. Online. Offline.
             Everywhere your customers are.
           </p>
           <button
@@ -109,7 +108,7 @@ export function Footer() {
         style={{ y: wordmarkY }}
         className="mt-10 select-none text-center font-display text-[34vw] leading-[0.78] tracking-tighter text-white/[0.05]"
       >
-        arth
+        ARTH
       </motion.p>
     </footer>
   )

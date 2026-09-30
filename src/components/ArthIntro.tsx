@@ -2,6 +2,7 @@ import { useRef, useState } from 'react'
 import { motion, useScroll, useTransform, useMotionValueEvent } from 'framer-motion'
 import { ArrowUpRight } from 'lucide-react'
 import { CountUp } from '@/components/CountUp'
+import { EASE_OUT_EXPO } from '@/lib/motion'
 
 const tickerServices = [
   'Social media management',
@@ -28,10 +29,10 @@ export function ArthIntro() {
     if (v > 0.32 && !statsActive) setStatsActive(true)
   })
 
-  // "arth" shrinks toward the header, where the nav logo takes over
-  const logoScale = useTransform(scrollYProgress, [0, 0.5], [1, 0.15])
-  const logoY = useTransform(scrollYProgress, [0, 0.5], ['0%', '-180%'])
-  const logoX = useTransform(scrollYProgress, [0, 0.5], ['0%', '-140%'])
+  // The logo shrinks toward the header's top-left corner, where the nav logo takes over
+  const logoScale = useTransform(scrollYProgress, [0, 0.5], [1, 0.12])
+  const logoY = useTransform(scrollYProgress, [0, 0.5], ['0vh', '-43vh'])
+  const logoX = useTransform(scrollYProgress, [0, 0.5], ['0vw', '-43vw'])
   const logoOpacity = useTransform(scrollYProgress, [0.35, 0.55], [1, 0])
 
   const heroOpacity = useTransform(scrollYProgress, [0.3, 0.6], [0, 1])
@@ -93,13 +94,31 @@ export function ArthIntro() {
           <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
         </motion.div>
 
-        {/* ─── Centered "arth" wordmark ─── */}
+        {/* ─── Centered ARTH logo: plays an entrance on load, then scroll carries it to the header ─── */}
         <div className="pointer-events-none absolute inset-0 z-20 flex items-center justify-center">
           <motion.h1
             style={{ scale: logoScale, y: logoY, x: logoX, opacity: logoOpacity }}
-            className="select-none font-display text-[24vw] leading-none tracking-tighter text-white will-change-transform md:text-[18vw] lg:text-[14vw]"
+            className="relative select-none will-change-transform"
           >
-            arth
+            <span className="sr-only">ARTH Marketing Media</span>
+            <motion.span
+              aria-hidden="true"
+              initial={{ opacity: 0, scale: 0.6 }}
+              animate={{ opacity: [0, 0.9, 0.35], scale: [0.6, 1.08, 1] }}
+              transition={{ duration: 2.2, ease: EASE_OUT_EXPO, times: [0, 0.45, 1] }}
+              className="absolute inset-[8%] rounded-full bg-[hsl(var(--accent)/0.35)] blur-[70px]"
+            />
+            <motion.img
+              src="/image.png"
+              alt=""
+              width={512}
+              height={487}
+              draggable={false}
+              initial={{ opacity: 0, scale: 0.82, rotate: -8, filter: 'blur(14px)' }}
+              animate={{ opacity: 1, scale: 1, rotate: 0, filter: 'blur(0px)' }}
+              transition={{ duration: 1.6, ease: EASE_OUT_EXPO, delay: 0.15 }}
+              className="relative block h-auto w-[78vw] max-w-[400px] md:w-[42vw]"
+            />
           </motion.h1>
         </div>
 
