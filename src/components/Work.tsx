@@ -5,6 +5,9 @@ import { EASE_OUT_EXPO } from '@/lib/motion'
 
 type CaseStudy = {
   client: string
+  /** Path under public/; without one the tile shows the monogram */
+  logo?: string
+  monogram: string
   sector: string
   location?: string
   summary: string
@@ -17,15 +20,18 @@ type CaseStudy = {
 const caseStudies: CaseStudy[] = [
   {
     client: 'Fit Secrets',
+    monogram: 'FS',
     sector: 'Fitness',
     summary:
       'Complete content and growth partner. We shoot and edit their videos, run their social media, manage their Meta Ads and handle SEO.',
     delivered: ['Video shooting', 'Video editing', 'Social media handling', 'Meta Ads', 'SEO'],
-    href: undefined,
-    linkLabel: 'View on Instagram',
+    href: 'https://www.instagram.com/fit_secrets_store',
+    linkLabel: '@fit_secrets_store on Instagram',
   },
   {
     client: 'Quantumrise Infra',
+    logo: '/logos/quantumrise-infra.png',
+    monogram: 'QI',
     sector: 'Real estate',
     location: 'Bangalore',
     summary:
@@ -36,6 +42,8 @@ const caseStudies: CaseStudy[] = [
   },
   {
     client: 'Samadhai Technologies',
+    logo: '/logos/samadhai-technologies.png',
+    monogram: 'ST',
     sector: 'Software',
     location: 'Hyderabad',
     summary:
@@ -46,6 +54,7 @@ const caseStudies: CaseStudy[] = [
   },
   {
     client: 'Acuity Tax',
+    monogram: 'AT',
     sector: 'Tax & compliance',
     location: 'Hyderabad',
     summary:
@@ -75,6 +84,21 @@ function CaseStudyRow({ project }: { project: CaseStudy }) {
 
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
         <div className="lg:col-span-5">
+          {/* Client logos are dark ink on transparent, so they sit on a light tile */}
+          <div
+            aria-hidden="true"
+            className="mb-6 flex h-24 w-36 items-center justify-center rounded-2xl bg-[#f4f1ea] px-3 py-2.5 shadow-[0_14px_30px_-14px_rgba(0,0,0,0.8)] transition-transform duration-500 ease-out-expo group-hover:-rotate-2 group-hover:scale-105 md:mb-8 md:h-28 md:w-44"
+          >
+            {project.logo ? (
+              <img src={project.logo} alt="" loading="lazy" className="h-full w-full object-contain" />
+            ) : (
+              <span className="font-display text-3xl tracking-tighter text-[#16161a] md:text-4xl">
+                {project.monogram}
+                <span className="text-[hsl(var(--accent))]">.</span>
+              </span>
+            )}
+          </div>
+
           <h3 className="font-display text-3xl leading-tight tracking-tight text-white transition-colors duration-500 group-hover:text-[hsl(var(--accent))] md:text-4xl lg:text-5xl">
             {isLinked ? (
               // The stretched ::after makes the whole row clickable while the link keeps a short accessible name.
