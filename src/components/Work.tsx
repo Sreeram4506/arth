@@ -20,6 +20,7 @@ type CaseStudy = {
 const caseStudies: CaseStudy[] = [
   {
     client: 'Fit Secrets',
+    logo: '/logos/fit-secrets.png',
     monogram: 'FS',
     sector: 'Fitness',
     summary:

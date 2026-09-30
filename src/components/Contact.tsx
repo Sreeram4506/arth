@@ -54,7 +54,7 @@ export function Contact() {
               will get back to you within 24 hours with actionable insights and next steps.
             </motion.p>
 
-            <motion.div custom={2} variants={rise} className="mt-10 space-y-2">
+            <motion.div custom={2} variants={rise} className="mt-10">
               <a
                 href={`mailto:${CONTACT_EMAIL}`}
                 className="group inline-flex items-center gap-2 text-lg text-white transition-colors hover:text-[hsl(var(--accent))]"
@@ -64,7 +64,6 @@ export function Contact() {
                 </span>
                 <ArrowUpRight aria-hidden="true" className="h-4 w-4" />
               </a>
-              <p className="text-sm text-white/55">New York, NY / Global</p>
             </motion.div>
           </motion.div>
 
